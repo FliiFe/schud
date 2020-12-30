@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SCHUD</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <style>
+        canvas {
+            position: absolute;
+            display: block;
+            transform-origin: center;
+            /* border: 1px solid white; */
+        }
+
+        img#base {
+            width: 100%;
+            /* position: absolute; */
+        }
+
+        body,
+        html {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            /* background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgba(255, 255, 0, 0.5)); */
+            background-color: black;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="./base.png" id="base" alt=""></img>
+    <canvas id="lpad" width="200" height="200"></canvas>
+    <canvas id="rpad" width="200" height="200"></canvas>
+    <script src="./src/script.js"></script>
+</body>
+
+</html>

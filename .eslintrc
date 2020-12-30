@@ -1,0 +1,25 @@
+{
+    "env": {
+        "node": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "constructor-super": 2,
+        "eqeqeq": 2,
+        "no-console": 0,
+        "no-inline-comments": 0,
+        "quotes": [
+            2,
+            "single",
+            "avoid-escape"
+        ],
+        "require-jsdoc": 1,
+        "semi": [
+            2,
+            "never"
+        ]
+    }
+}
