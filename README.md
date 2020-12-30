@@ -1,4 +1,4 @@
-#SCHUD
+# SCHUD
 
 A Steam Controller HUD à-la-[VSCView](https://github.com/Nielk1/VSCView/), but for Linux.
 
