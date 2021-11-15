@@ -28,7 +28,7 @@ class SteamControllerDevice extends EventEmitter {
     constructor(steamControllerPath) {
         super()
         const matchingDevices = HID.devices()
-            .filter(device => device.manufacturer.match(/Valve/i) && device.usagePage > 1)
+            .filter(device => device?.manufacturer?.match(/Valve/i) && device?.usagePage > 1);
         if (!matchingDevices.length) {
             console.log('Could not find Steam Controller')
             process.exit(1)
