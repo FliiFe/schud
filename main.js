@@ -10,8 +10,8 @@ function createWindow() {
     const win = new BrowserWindow({
         width,
         height,
-        resizable: false,
-        frame: false,
+        resizable: true,
+        frame: true,
         webPreferences: {
             nodeIntegration: true
         }
