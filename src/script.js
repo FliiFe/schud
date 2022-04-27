@@ -5,22 +5,33 @@ const dev = new SteamControllerDevice()
 // dev.on('tpl_pos_x', s => console.log(s.tpl.pos.x))
 // setInterval(_ => document.getElementById('hey').innerHTML = JSON.stringify(dev.state), 10)
 
+// Canva
 const lctx = document.getElementById('lpad').getContext('2d')
 const rctx = document.getElementById('rpad').getContext('2d')
 const buttonpad = document.getElementById('buttonpad').getContext('2d')
+const rtriggerctx = document.getElementById('rtrigger').getContext('2d')
+const ltriggerctx = document.getElementById('ltrigger').getContext('2d')
 
+// Vars
 const canvasSize = 200
 const padCanvasSize = 200
+const triggerCanvasSize = 150
 const maxPointerRadius = 20
 const previousStackSize = 60
 const lPreviousStack = []
 const rPreviousStack = []
 
+// Steam controller raw value to canvas coordinate conversions
 const rawToCanvasCoord = x => Math.floor((x + (1 << 15)) / (1 << 16) * (canvasSize - 2 * maxPointerRadius)) + maxPointerRadius
+const triggerValueToCanvasCoord = value => value * (triggerCanvasSize - 30) / 255 + 30
 
+// Transform canva based on theme.js
 document.getElementById('lpad').setAttribute('style', `top: ${theme.canvas_l.top}%; left: ${theme.canvas_l.left}%; width: ${theme.canvas_l.size}%;; transform: rotate(${theme.canvas_l.rotate}deg);`)
 document.getElementById('rpad').setAttribute('style', `top: ${theme.canvas_r.top}%; right: ${theme.canvas_r.right}%; width: ${theme.canvas_r.size}%; transform: rotate(${theme.canvas_r.rotate}deg);`)
 document.getElementById('buttonpad').setAttribute('style', `top: ${theme.canvas_buttons.top}%; right: ${theme.canvas_buttons.right}%; width: ${theme.canvas_buttons.size}%; transform: rotate(${theme.canvas_buttons.rotate}deg);`)
+document.getElementById('rtrigger').setAttribute('style', `top: ${theme.canvas_rtrigger.top}%; right: ${theme.canvas_rtrigger.right}%; width: ${theme.canvas_rtrigger.size}%; transform: rotate(${theme.canvas_rtrigger.rotate}deg);`)
+document.getElementById('ltrigger').setAttribute('style', `top: ${theme.canvas_ltrigger.top}%; left: ${theme.canvas_ltrigger.left}%; width: ${theme.canvas_ltrigger.size}%; transform: rotate(${theme.canvas_ltrigger.rotate}deg);`)
+
 
 /**
  * Main logic to draw on canvas
@@ -30,9 +41,15 @@ function refreshCanvas() {
     const lposy = rawToCanvasCoord(-dev.state.tpl.pos.y)
     const rposx = rawToCanvasCoord(dev.state.tpr.pos.x)
     const rposy = rawToCanvasCoord(-dev.state.tpr.pos.y)
+    const rtposx = triggerValueToCanvasCoord(dev.state.triggers.right.value)
+    const ltposx = triggerValueToCanvasCoord(Math.abs(dev.state.triggers.left.value - 255))
+
+    // Clear canvases
     lctx.clearRect(0, 0, canvasSize, canvasSize)
     rctx.clearRect(0, 0, canvasSize, canvasSize)
     buttonpad.clearRect(0, 0, padCanvasSize, padCanvasSize)
+    rtriggerctx.clearRect(0, 0, canvasSize, canvasSize)
+    ltriggerctx.clearRect(0, 0, canvasSize, canvasSize)
 
     // Touchpad touches
     if (dev.state.tpl.touched) {
@@ -61,18 +78,36 @@ function refreshCanvas() {
     }
 
     // ABXY Buttons
-    if (dev.state.buttons.a){
+    if (dev.state.buttons.a) {
         drawA(buttonpad)
     }
-    if (dev.state.buttons.y){
+    if (dev.state.buttons.y) {
         drawY(buttonpad)
     }
-    if (dev.state.buttons.x){
+    if (dev.state.buttons.x) {
         drawX(buttonpad)
     }
-    if (dev.state.buttons.b){
+    if (dev.state.buttons.b) {
         drawB(buttonpad)
     }
+
+    // Triggers
+    if (dev.state.triggers.right.value > 0) {
+        drawRightT(rtriggerctx, rtposx)
+    }
+    if (dev.state.triggers.left.value > 0) {
+        drawLeftT(ltriggerctx, ltposx)
+    }
+    if (dev.state.triggers.right.fullpull) {
+        drawRightFull(rtriggerctx)
+    }
+    if (dev.state.triggers.left.fullpull) {
+        drawLeftFull(ltriggerctx)
+    }
+
+
+
+
 
     // Refresh canvas
     window.requestAnimationFrame(refreshCanvas)
@@ -118,7 +153,7 @@ function drawPointer(ctx, x, y, o = 1, r = 20) {
 
 /**
  * Draw the A button
- * @param {CanvasRenderingContext2D} - a 2D context to render with
+ * @param {CanvasRenderingContext2D} pad - a 2D context to render with
  */
 function drawA (pad) {
     pad.beginPath()
@@ -130,7 +165,7 @@ function drawA (pad) {
 
 /**
  * Draw the Y button
- * @param {CanvasRenderingContext2D} - a 2D context to render with
+ * @param {CanvasRenderingContext2D} pad - a 2D context to render with
  */
 function drawY (pad) {
     pad.beginPath()
@@ -142,7 +177,7 @@ function drawY (pad) {
 
 /**
  * Draw the X button
- * @param {CanvasRenderingContext2D} - a 2D context to render with
+ * @param {CanvasRenderingContext2D} pad - a 2D context to render with
  */
 function drawX (pad) {
     pad.beginPath()
@@ -154,7 +189,7 @@ function drawX (pad) {
 
 /**
  * Draw the B button
- * @param {CanvasRenderingContext2D} - a 2D context to render with
+ * @param {CanvasRenderingContext2D} pad - a 2D context to render with
  */
 function drawB (pad) {
     pad.beginPath()
@@ -164,6 +199,55 @@ function drawB (pad) {
     pad.closePath()
 }
 
+/**
+ * Draw right trigger
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ * @param {int} x - x value of rectangle
+ */
+function drawRightT (ctx, x) {
+    ctx.beginPath()
+    ctx.fillRect(0, 12, x, 35)
+    ctx.fillStyle = `rgba(255,255,255,${1})`
+    ctx.fill()
+    ctx.closePath()
+}
+
+/**
+ * Draw left trigger
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ * @param {int} x - x value of rectangle
+ */
+function drawLeftT (ctx, x) {
+    ctx.beginPath()
+    ctx.fillRect(x, 12, 200, 35)
+    ctx.fillStyle = `rgba(255,255,255,${1})`
+    ctx.fill()
+    ctx.closePath()
+}
+
+/**
+ * Draw right trigger full pull
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawRightFull (ctx) {
+    ctx.beginPath()
+    ctx.arc(170, 30, 30, 2 * Math.PI, false)
+    ctx.fillStyle = `rgba(255,255,255,${1})`
+    ctx.fill()
+    ctx.closePath()
+}
+
+/**
+ * Draw left trigger full pull
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawLeftFull (ctx) {
+    ctx.beginPath()
+    ctx.arc(30, 30, 30, 2 * Math.PI, false)
+    ctx.fillStyle = `rgba(255,255,255,${1})`
+    ctx.fill()
+    ctx.closePath()
+}
 
 
 
