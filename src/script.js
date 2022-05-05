@@ -11,11 +11,14 @@ const rctx = document.getElementById('rpad').getContext('2d')
 const buttonpad = document.getElementById('buttonpad').getContext('2d')
 const rtriggerctx = document.getElementById('rtrigger').getContext('2d')
 const ltriggerctx = document.getElementById('ltrigger').getContext('2d')
+const lbumperctx = document.getElementById('lbumper').getContext('2d')
+const rbumperctx = document.getElementById('rbumper').getContext('2d')
 
 // Vars
 const canvasSize = 200
 const padCanvasSize = 200
 const triggerCanvasSize = 150
+const rbCanvasSize = 190
 const maxPointerRadius = 20
 const previousStackSize = 60
 const lPreviousStack = []
@@ -31,6 +34,8 @@ document.getElementById('rpad').setAttribute('style', `top: ${theme.canvas_r.top
 document.getElementById('buttonpad').setAttribute('style', `top: ${theme.canvas_buttons.top}%; right: ${theme.canvas_buttons.right}%; width: ${theme.canvas_buttons.size}%; transform: rotate(${theme.canvas_buttons.rotate}deg);`)
 document.getElementById('rtrigger').setAttribute('style', `top: ${theme.canvas_rtrigger.top}%; right: ${theme.canvas_rtrigger.right}%; width: ${theme.canvas_rtrigger.size}%; transform: rotate(${theme.canvas_rtrigger.rotate}deg);`)
 document.getElementById('ltrigger').setAttribute('style', `top: ${theme.canvas_ltrigger.top}%; left: ${theme.canvas_ltrigger.left}%; width: ${theme.canvas_ltrigger.size}%; transform: rotate(${theme.canvas_ltrigger.rotate}deg);`)
+document.getElementById('lbumper').setAttribute('style', `top: ${theme.canvas_lbumper.top}%; left: ${theme.canvas_lbumper.left}%; width: ${theme.canvas_lbumper.size}%; transform: rotate(${theme.canvas_lbumper.rotate}deg);`)
+document.getElementById('rbumper').setAttribute('style', `top: ${theme.canvas_rbumper.top}%; right: ${theme.canvas_rbumper.right}%; width: ${theme.canvas_rbumper.size}%; transform: rotate(${theme.canvas_rbumper.rotate}deg);`)
 
 
 /**
@@ -50,6 +55,8 @@ function refreshCanvas() {
     buttonpad.clearRect(0, 0, padCanvasSize, padCanvasSize)
     rtriggerctx.clearRect(0, 0, canvasSize, canvasSize)
     ltriggerctx.clearRect(0, 0, canvasSize, canvasSize)
+    lbumperctx.clearRect(0, 0, canvasSize, canvasSize)
+    rbumperctx.clearRect(0, 0, canvasSize, canvasSize)
 
     // Touchpad touches
     if (dev.state.tpl.touched) {
@@ -105,6 +112,13 @@ function refreshCanvas() {
         drawLeftFull(ltriggerctx)
     }
 
+    // Bumpers
+    if (dev.state.buttons.lb) {
+        drawLB(lbumperctx)
+    }
+    if (dev.state.buttons.rb) {
+        drawRB(rbumperctx)
+    }
 
 
 
@@ -248,6 +262,47 @@ function drawLeftFull (ctx) {
     ctx.fill()
     ctx.closePath()
 }
+
+/**
+ * Draw left bumper
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawLB (ctx) {
+    ctx.beginPath()
+    ctx.arc(canvasSize / 2, canvasSize / 2, canvasSize / 3, 0.40, 0.75 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.stroke()
+    ctx.lineWidth = 5
+    ctx.closePath()
+
+    ctx.beginPath()
+    ctx.arc(canvasSize / 2, canvasSize / 2, canvasSize / 2 - 5, 0.25, 0.8 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.stroke()
+    ctx.lineWidth = 5
+    ctx.closePath()
+}
+
+/**
+ * Draw right bumper
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawRB (ctx) {
+    ctx.beginPath()
+    ctx.arc(rbCanvasSize / 2, rbCanvasSize / 2, rbCanvasSize / 3, 0.75, 0.88 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.stroke()
+    ctx.lineWidth = 5
+    ctx.closePath()
+
+    ctx.beginPath()
+    ctx.arc(rbCanvasSize / 2, rbCanvasSize / 2, rbCanvasSize / 2 - 5, 0.55, 0.93 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.stroke()
+    ctx.lineWidth = 5
+    ctx.closePath()
+}
+
 
 
 
