@@ -18,5 +18,29 @@ module.exports = {
         right: 28,
         size: 20,
         rotate: 0
+    },
+    canvas_rtrigger: {
+        top: 20,
+        right: 22,
+        size: 15,
+        rotate: 0
+    },
+    canvas_ltrigger: {
+        top: 20,
+        left: 20,
+        size: 15,
+        rotate: 0
+    },
+    canvas_lbumper: {
+        top: 20,
+        left: 15,
+        size: 10,
+        rotate: 0
+    },
+    canvas_rbumper: {
+        top: 20,
+        right: 17,
+        size: 10,
+        rotate: 0
     }
 }
