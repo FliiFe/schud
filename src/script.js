@@ -88,6 +88,9 @@ function refreshCanvas() {
     if (dev.state.joystick.pos.x || dev.state.joystick.pos.y) {
         drawStick(stickctx, stickx, sticky)
     }
+    if (dev.state.joystick.clicked) {
+        stickClick(stickctx)
+    }
 
     // Trackpad clicks
     if (dev.state.tpr.clicked) {
@@ -188,6 +191,19 @@ function drawStick (ctx, x, y) {
     ctx.arc(x, y, 40, 0, 2 * Math.PI, false)
     ctx.fillStyle = `rgba(255,255,255,${1})`
     ctx.fill()
+    ctx.closePath()
+
+}
+/**
+ * 
+ * @param {CanvasRenderingContext2D} stickctx - a 2D context to render with
+ */
+function stickClick (ctx) {
+    ctx.beginPath()
+    ctx.arc(stickCanvasSize / 2, stickCanvasSize / 2, stickCanvasSize / 2.3, 0, 2 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.lineWidth = 5
+    ctx.stroke()
     ctx.closePath()
 
 }
