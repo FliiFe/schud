@@ -13,19 +13,23 @@ const rtriggerctx = document.getElementById('rtrigger').getContext('2d')
 const ltriggerctx = document.getElementById('ltrigger').getContext('2d')
 const lbumperctx = document.getElementById('lbumper').getContext('2d')
 const rbumperctx = document.getElementById('rbumper').getContext('2d')
+const stickctx = document.getElementById('stick').getContext('2d')
 
 // Vars
 const canvasSize = 200
 const padCanvasSize = 200
 const triggerCanvasSize = 150
+const stickCanvasSize = 150
 const rbCanvasSize = 190
 const maxPointerRadius = 20
+const maxStickRadius = 40
 const previousStackSize = 60
 const lPreviousStack = []
 const rPreviousStack = []
 
 // Steam controller raw value to canvas coordinate conversions
 const rawToCanvasCoord = x => Math.floor((x + (1 << 15)) / (1 << 16) * (canvasSize - 2 * maxPointerRadius)) + maxPointerRadius
+const rawToStickCoord = x => Math.floor((x + (1 << 15)) / (1 << 16) * (stickCanvasSize - 2 * maxStickRadius)) + maxStickRadius
 const triggerValueToCanvasCoord = value => value * (triggerCanvasSize - 30) / 255 + 30
 
 // Transform canva based on theme.js
@@ -36,6 +40,7 @@ document.getElementById('rtrigger').setAttribute('style', `top: ${theme.canvas_r
 document.getElementById('ltrigger').setAttribute('style', `top: ${theme.canvas_ltrigger.top}%; left: ${theme.canvas_ltrigger.left}%; width: ${theme.canvas_ltrigger.size}%; transform: rotate(${theme.canvas_ltrigger.rotate}deg);`)
 document.getElementById('lbumper').setAttribute('style', `top: ${theme.canvas_lbumper.top}%; left: ${theme.canvas_lbumper.left}%; width: ${theme.canvas_lbumper.size}%; transform: rotate(${theme.canvas_lbumper.rotate}deg);`)
 document.getElementById('rbumper').setAttribute('style', `top: ${theme.canvas_rbumper.top}%; right: ${theme.canvas_rbumper.right}%; width: ${theme.canvas_rbumper.size}%; transform: rotate(${theme.canvas_rbumper.rotate}deg);`)
+document.getElementById('stick').setAttribute('style', `top: ${theme.canvas_stick.top}%; left: ${theme.canvas_stick.left}%; width: ${theme.canvas_stick.size}%; transform: rotate(${theme.canvas_stick.rotate}deg);`)
 
 
 /**
@@ -48,6 +53,8 @@ function refreshCanvas() {
     const rposy = rawToCanvasCoord(-dev.state.tpr.pos.y)
     const rtposx = triggerValueToCanvasCoord(dev.state.triggers.right.value)
     const ltposx = triggerValueToCanvasCoord(Math.abs(dev.state.triggers.left.value - 255))
+    const stickx = rawToStickCoord(dev.state.joystick.pos.x)
+    const sticky = rawToStickCoord(-dev.state.joystick.pos.y)
 
     // Clear canvases
     lctx.clearRect(0, 0, canvasSize, canvasSize)
@@ -57,6 +64,7 @@ function refreshCanvas() {
     ltriggerctx.clearRect(0, 0, canvasSize, canvasSize)
     lbumperctx.clearRect(0, 0, canvasSize, canvasSize)
     rbumperctx.clearRect(0, 0, canvasSize, canvasSize)
+    stickctx.clearRect(0, 0, canvasSize, canvasSize)
 
     // Touchpad touches
     if (dev.state.tpl.touched) {
@@ -74,6 +82,14 @@ function refreshCanvas() {
     for (let i = 0; i < rPreviousStack.length; i++) {
         let [x, y] = rPreviousStack[i]
         drawPointer(rctx, x, y, (i + 1) / rPreviousStack.length, i / previousStackSize * maxPointerRadius)
+    }
+
+    // Stick
+    if (dev.state.joystick.pos.x || dev.state.joystick.pos.y) {
+        drawStick(stickctx, stickx, sticky)
+    }
+    if (dev.state.joystick.clicked) {
+        stickClick(stickctx)
     }
 
     // Trackpad clicks
@@ -121,8 +137,6 @@ function refreshCanvas() {
     }
 
 
-
-
     // Refresh canvas
     window.requestAnimationFrame(refreshCanvas)
 }
@@ -163,6 +177,35 @@ function drawPointer(ctx, x, y, o = 1, r = 20) {
     ctx.fillStyle = `rgba(255,255,255,${o})`
     ctx.fill()
     ctx.closePath()
+}
+
+
+/**
+ * 
+ * @param {CanvasRenderingContext2D} stickctx - a 2D context to render with
+ * @param {int} x - x coordinate
+ * @param {int} y = y coordinate
+ */
+function drawStick (ctx, x, y) {
+    ctx.beginPath()
+    ctx.arc(x, y, 40, 0, 2 * Math.PI, false)
+    ctx.fillStyle = `rgba(255,255,255,${1})`
+    ctx.fill()
+    ctx.closePath()
+
+}
+/**
+ * 
+ * @param {CanvasRenderingContext2D} stickctx - a 2D context to render with
+ */
+function stickClick (ctx) {
+    ctx.beginPath()
+    ctx.arc(stickCanvasSize / 2, stickCanvasSize / 2, stickCanvasSize / 2.3, 0, 2 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.lineWidth = 5
+    ctx.stroke()
+    ctx.closePath()
+
 }
 
 /**

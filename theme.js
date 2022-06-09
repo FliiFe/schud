@@ -42,5 +42,11 @@ module.exports = {
         right: 17,
         size: 10,
         rotate: 0
+    },
+    canvas_stick: {
+        top: 54,
+        left: 31.5,
+        size: 20,
+        rotate: 0
     }
 }
