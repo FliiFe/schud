@@ -14,6 +14,8 @@ const ltriggerctx = document.getElementById('ltrigger').getContext('2d')
 const lbumperctx = document.getElementById('lbumper').getContext('2d')
 const rbumperctx = document.getElementById('rbumper').getContext('2d')
 const stickctx = document.getElementById('stick').getContext('2d')
+const rgripctx = document.getElementById('rgrip').getContext('2d')
+const lgripctx = document.getElementById('lgrip').getContext('2d')
 
 // Vars
 const canvasSize = 200
@@ -41,6 +43,8 @@ document.getElementById('ltrigger').setAttribute('style', `top: ${theme.canvas_l
 document.getElementById('lbumper').setAttribute('style', `top: ${theme.canvas_lbumper.top}%; left: ${theme.canvas_lbumper.left}%; width: ${theme.canvas_lbumper.size}%; transform: rotate(${theme.canvas_lbumper.rotate}deg);`)
 document.getElementById('rbumper').setAttribute('style', `top: ${theme.canvas_rbumper.top}%; right: ${theme.canvas_rbumper.right}%; width: ${theme.canvas_rbumper.size}%; transform: rotate(${theme.canvas_rbumper.rotate}deg);`)
 document.getElementById('stick').setAttribute('style', `top: ${theme.canvas_stick.top}%; left: ${theme.canvas_stick.left}%; width: ${theme.canvas_stick.size}%; transform: rotate(${theme.canvas_stick.rotate}deg);`)
+document.getElementById('lgrip').setAttribute('style', `top: ${theme.canvas_lgrip.top}%; left: ${theme.canvas_lgrip.left}%; width: ${theme.canvas_lgrip.size}%; transform: rotate(${theme.canvas_lgrip.rotate}deg);`)
+document.getElementById('rgrip').setAttribute('style', `top: ${theme.canvas_rgrip.top}%; right: ${theme.canvas_rgrip.right}%; width: ${theme.canvas_rgrip.size}%; transform: rotate(${theme.canvas_rgrip.rotate}deg);`)
 
 
 /**
@@ -65,6 +69,8 @@ function refreshCanvas() {
     lbumperctx.clearRect(0, 0, canvasSize, canvasSize)
     rbumperctx.clearRect(0, 0, canvasSize, canvasSize)
     stickctx.clearRect(0, 0, canvasSize, canvasSize)
+    lgripctx.clearRect(0, 0, canvasSize, canvasSize)
+    rgripctx.clearRect(0, 0, canvasSize, canvasSize)
 
     // Touchpad touches
     if (dev.state.tpl.touched) {
@@ -134,6 +140,14 @@ function refreshCanvas() {
     }
     if (dev.state.buttons.rb) {
         drawRB(rbumperctx)
+    }
+
+    // Grips
+    if (dev.state.buttons.br) {
+        drawRightGrip(rgripctx)
+    }
+    if (dev.state.buttons.bl) {
+        drawLeftGrip(lgripctx)
     }
 
 
@@ -346,6 +360,47 @@ function drawRB (ctx) {
     ctx.closePath()
 }
 
+
+/**
+ * Draw right grip
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawRightGrip (ctx) {
+    ctx.beginPath()
+    ctx.arc(rbCanvasSize / 2, rbCanvasSize / 2, rbCanvasSize / 3, 0.75, 0.88 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.stroke()
+    ctx.lineWidth = 5
+    ctx.closePath()
+
+    ctx.beginPath()
+    ctx.arc(rbCanvasSize / 2, rbCanvasSize / 2, rbCanvasSize / 2 - 5, 0.55, 0.93 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.stroke()
+    ctx.lineWidth = 5
+    ctx.closePath()
+
+}
+
+/**
+ * Draw left grip
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawLeftGrip (ctx) {
+    ctx.beginPath()
+    ctx.arc(canvasSize / 2, canvasSize / 2, canvasSize / 3, 0.40, 0.75 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.stroke()
+    ctx.lineWidth = 5
+    ctx.closePath()
+
+    ctx.beginPath()
+    ctx.arc(canvasSize / 2, canvasSize / 2, canvasSize / 2 - 5, 0.25, 0.8 * Math.PI)
+    ctx.strokeStyle = 'white'
+    ctx.stroke()
+    ctx.lineWidth = 5
+    ctx.closePath()
+}
 
 
 
