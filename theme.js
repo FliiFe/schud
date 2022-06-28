@@ -48,5 +48,18 @@ module.exports = {
         left: 31.5,
         size: 20,
         rotate: 0
+    },
+    canvas_lgrip: {
+        top: 78,
+        left: 23,
+        size: 10,
+        rotate: 125
+    },
+    canvas_rgrip: {
+        top: 78,
+        right: 23,
+        size: 10,
+        rotate: -125
     }
+
 }
