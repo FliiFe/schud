@@ -60,6 +60,12 @@ module.exports = {
         right: 23,
         size: 10,
         rotate: -125
+    },
+    canvas_steambutton: {
+        top: 34,
+        right: 40,
+        size: 20,
+        rotate: -45
     }
 
 }

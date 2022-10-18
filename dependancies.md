@@ -1,0 +1,2 @@
+## Solus
+- libusb-devel
