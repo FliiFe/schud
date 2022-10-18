@@ -16,6 +16,7 @@ const rbumperctx = document.getElementById('rbumper').getContext('2d')
 const stickctx = document.getElementById('stick').getContext('2d')
 const rgripctx = document.getElementById('rgrip').getContext('2d')
 const lgripctx = document.getElementById('lgrip').getContext('2d')
+const steambuttonctx = document.getElementById('steambutton').getContext('2d')
 
 // Vars
 const canvasSize = 200
@@ -45,6 +46,7 @@ document.getElementById('rbumper').setAttribute('style', `top: ${theme.canvas_rb
 document.getElementById('stick').setAttribute('style', `top: ${theme.canvas_stick.top}%; left: ${theme.canvas_stick.left}%; width: ${theme.canvas_stick.size}%; transform: rotate(${theme.canvas_stick.rotate}deg);`)
 document.getElementById('lgrip').setAttribute('style', `top: ${theme.canvas_lgrip.top}%; left: ${theme.canvas_lgrip.left}%; width: ${theme.canvas_lgrip.size}%; transform: rotate(${theme.canvas_lgrip.rotate}deg);`)
 document.getElementById('rgrip').setAttribute('style', `top: ${theme.canvas_rgrip.top}%; right: ${theme.canvas_rgrip.right}%; width: ${theme.canvas_rgrip.size}%; transform: rotate(${theme.canvas_rgrip.rotate}deg);`)
+document.getElementById('steambutton').setAttribute('style', `top: ${theme.canvas_steambutton.top}%; right: ${theme.canvas_steambutton.right}%; width: ${theme.canvas_steambutton.size}%; transform: rotate(${theme.canvas_steambutton.rotate}deg);`)
 
 
 /**
@@ -71,6 +73,7 @@ function refreshCanvas() {
     stickctx.clearRect(0, 0, canvasSize, canvasSize)
     lgripctx.clearRect(0, 0, canvasSize, canvasSize)
     rgripctx.clearRect(0, 0, canvasSize, canvasSize)
+    steambuttonctx.clearRect(0, 0, canvasSize, canvasSize)
 
     // Touchpad touches
     if (dev.state.tpl.touched) {
@@ -148,6 +151,17 @@ function refreshCanvas() {
     }
     if (dev.state.buttons.bl) {
         drawLeftGrip(lgripctx)
+    }
+
+    // Steam, start, select
+    if (dev.state.buttons.start) {
+        drawStart(steambuttonctx)
+    }
+    if (dev.state.buttons.select) {
+        drawSelect(steambuttonctx)
+    }
+    if (dev.state.buttons.steam) {
+        drawSteamButton(steambuttonctx)
     }
 
 
@@ -401,6 +415,46 @@ function drawLeftGrip (ctx) {
     ctx.lineWidth = 5
     ctx.closePath()
 }
+
+/**
+ * Draw the Start Button
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawStart (ctx) {
+    // Draw oval by scaling a circle
+    ctx.beginPath()
+    ctx.ellipse(151, 157, 30, 17, Math.PI / 4, 0, 2 * Math.PI, false)
+    ctx.fillStyle = `rgba(255,255,255,${1})`
+    ctx.fill()
+    ctx.closePath()
+
+    
+}
+
+/**
+ * Draw the Select Button
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawSelect (ctx) {
+    ctx.beginPath()
+    ctx.ellipse(36, 40, 30, 17, Math.PI / 4, 0, 2 * Math.PI, false)
+    ctx.fillStyle = `rgba(255,255,255,${1})`
+    ctx.fill()
+    ctx.closePath()
+}
+
+/**
+ * Draw the Steam Button
+ * @param {CanvasRenderingContext2D} ctx - a 2D context to render with
+ */
+function drawSteamButton (ctx) {
+    ctx.beginPath()
+    ctx.arc(105, 85, 40, 0, 2 * Math.PI, false)
+    ctx.fillStyle = `rgba(255,255,255,${1})`
+    ctx.fill()
+    ctx.closePath()
+}
+
 
 
 
