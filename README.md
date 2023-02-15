@@ -2,4 +2,8 @@
 
 A Steam Controller HUD à-la-[VSCView](https://github.com/Nielk1/VSCView/), but for Linux.
 
-The project is in a very early stage of development but every technical bit works. A full replica of the controller's state at any given time is stored (events are parsed from the hidraw device).
+All buttons now show. Test release includes packaged binaries. Should work on any distribution, though I have only tested on Solus.
+
+To run:
+1. Unzip "schud-linux-x64.zip"
+2. Run the "schud" file (double click, or right click -> open file, or `./schud` in terminal).
