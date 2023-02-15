@@ -117,3 +117,6 @@ dist
 
 # build/make directory
 out/
+
+# vim swap files
+*~
