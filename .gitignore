@@ -114,3 +114,9 @@ dist
 .vscode-test
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+# build/make directory
+out/
+
+# vim swap files
+*~

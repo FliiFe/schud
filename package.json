@@ -1,20 +1,29 @@
 {
-    "name": "schud",
-    "version": "1.0.0",
-    "description": "HUD for steam controller on linux",
-    "main": "main.js",
-    "scripts": {
-        "postinstall": "electron-rebuild",
-        "start": "electron ."
-    },
-    "author": "Théophile Cailliau",
-    "license": "ISC",
-    "dependencies": {
-        "eslint": "^8.13.0",
-        "node-hid": "^2.1.1"
-    },
-    "devDependencies": {
-        "electron": "^11.5.0",
-        "electron-rebuild": "^2.3.5"
-    }
+  "name": "schud",
+  "version": "1.0.0",
+  "description": "HUD for steam controller on linux",
+  "main": "main.js",
+  "scripts": {
+    "postinstall": "electron-rebuild",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "author": "Théophile Cailliau",
+  "license": "ISC",
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "eslint": "^8.13.0",
+    "node-hid": "^2.1.1"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0",
+    "@electron-forge/maker-deb": "^6.0.0",
+    "@electron-forge/maker-flatpak": "^6.0.0",
+    "@electron-forge/maker-rpm": "^6.0.0",
+    "@electron-forge/maker-squirrel": "^6.0.0",
+    "@electron-forge/maker-zip": "^6.0.0",
+    "electron": "^11.5.0",
+    "electron-rebuild": "^2.3.5"
+  }
 }
